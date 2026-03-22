@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pflanzen Bestimmung</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #6bbf59, #a8e063);
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .app {
+      background: white;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .question {
+      font-size: 18px;
+      margin: 20px 0;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 15px;
+      font-size: 16px;
+      border: none;
+      border-radius: 12px;
+      background: #6bbf59;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #4da63c;
+      transform: scale(1.03);
+    }
+
+    img {
+      width: 100%;
+      border-radius: 12px;
+      margin-top: 15px;
+    }
+
+    .progress {
+      height: 8px;
+      background: #ddd;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #6bbf59;
+      transition: 0.3s;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <h1>🌼 Pflanzen bestimmen</h1>
+  <div class="progress"><div class="progress-bar" id="bar"></div></div>
+  <div class="question" id="question"></div>
+  <div id="answers"></div>
+  <div id="result"></div>
+</div>
+
+<script>
+let step = 1;
+
+function updateProgress() {
+  document.getElementById('bar').style.width = (step * 25) + '%';
+}
+
+function setQuestion(text, options) {
+  document.getElementById('question').innerText = text;
+  const answers = document.getElementById('answers');
+  answers.innerHTML = '';
+
+  options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.innerText = opt.text;
+    btn.onclick = opt.action;
+    answers.appendChild(btn);
+  });
+}
+
+function start() {
+  step = 1;
+  updateProgress();
+  setQuestion('Wie viele Kronblätter hat die Blüte?', [
+    { text: '4', action: q2 },
+    { text: '5', action: q3 }
+  ]);
+}
+
+function q2() {
+  step = 2;
+  updateProgress();
+  setQuestion('Welche Farbe haben die Kronblätter?', [
+    { text: 'Gelb', action: () => showResult('Raps','raps.jpg') },
+    { text: 'Weiß', action: () => showResult('Gewöhnliches Hirtentäschel','hirtentaeschel.jpg') }
+  ]);
+}
+
+function q3() {
+  step = 2;
+  updateProgress();
+  setQuestion('Sind die Kelchblätter gut sichtbar?', [
+    { text: 'Ja', action: q4 },
+    { text: 'Nein', action: () => showResult('Scharfer Hahnenfuß','hahnenfuss.jpg') }
+  ]);
+}
+
+function q4() {
+  step = 3;
+  updateProgress();
+  setQuestion('Welche Farbe haben die Blüten?', [
+    { text: 'Weiß', action: () => showResult('Erdbeere','erdbeere.jpg') },
+    { text: 'Gelblich/Grünlich', action: () => showResult('Echte Nelkenwurz','nelkenwurz.jpg') }
+  ]);
+}
+
+function showResult(name, image) {
+  step = 4;
+  updateProgress();
+  document.getElementById('question').innerText = 'Ergebnis:';
+  document.getElementById('answers').innerHTML = '';
+  document.getElementById('result').innerHTML = `
+    <h2>${name}</h2>
+    <p>Vergleiche mit dem Bild:</p>
+    <img src="${image}">
+    <button onclick="location.reload()">Neu starten</button>
+  `;
+}
+
+start();
+</script>
+
+</body>
+</html>
+
+/projektordner
+  ├── index.html
+  ├── raps.jpg
+  ├── hirtentaeschel.jpg
+  ├── hahnenfuss.jpg
+  ├── erdbeere.jpg
+  ├── nelkenwurz.jpg
